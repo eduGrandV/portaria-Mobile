@@ -7,6 +7,8 @@ interface HistoricoItem {
   cpf: string;
   data: string;
   uri: string;
+  numeroCracha?: string | null;     
+  crachaDevolvido?: boolean | null; 
 }
 
 interface AcessoContextData {

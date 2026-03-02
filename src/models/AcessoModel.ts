@@ -7,7 +7,7 @@ export const AcessoSchema = z.object({
   placa: z.string().min(5, "Placa incompleta"),
   setor: z.string().min(2, "Informe o setor de destino"),
   autorizador: z.string().min(2, "Informe quem autorizou a entrada"),
-
+  numeroCracha: z.string().optional()
 });
 
 export type AcessoFormData = z.infer<typeof AcessoSchema>;

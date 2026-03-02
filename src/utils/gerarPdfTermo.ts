@@ -26,6 +26,21 @@ export async function gerarPdfTermo(
     const fotoCaminhaoB64 = await uriToBase64(fotoCaminhaoUri);
     const dataAtual = dayjs().format("DD/MM/YYYY [às] HH:mm");
 
+    // LÓGICA DO PLANO B: Verifica se foi assinado no dedo ou via RG
+    const htmlAssinatura = assinaturaBase64 === "ASSINADO_VIA_RG"
+      ? `
+        <div style="background: #f0fdf4; border: 1px dashed #16a34a; padding: 15px; border-radius: 12px; margin-bottom: 10px;">
+          <p style="color: #16a34a; font-weight: 700; font-size: 14px; text-align: center;">
+            ✓ ASSINATURA FÍSICA DISPENSADA
+          </p>
+          <p style="color: #15803d; font-size: 12px; text-align: center; margin-top: 5px;">
+            Identidade do motorista conferida visualmente pelo operador da portaria através de documento oficial (RG/CNH).
+          </p>
+        </div>
+        `
+      : `<img src="${assinaturaBase64}" class="assinatura-imagem" />`;
+
+
     const html = `
       <html>
         <head>
@@ -418,7 +433,7 @@ export async function gerarPdfTermo(
           <div class="page-container">
             <h2 class="titulo-secao">Normas e Procedimentos</h2>
 
-           <div class="timeline-item">
+            <div class="timeline-item">
               <div class="timeline-marker">1</div>
               <div class="timeline-content"><p>Avisar com antecedência a visita;</p></div>
             </div>
@@ -497,7 +512,9 @@ export async function gerarPdfTermo(
               <div class="assinatura-wrapper">
                 <div class="assinatura-area">
                   <div class="assinatura-label">Assinatura do Motorista</div>
-                  <img src="${assinaturaBase64}" class="assinatura-imagem" />
+                  
+                  ${htmlAssinatura}
+                  
                   <div class="assinatura-nome-impresso">${dados.nomeMotorista}</div>
                 </div>
                 <div class="selo-autenticidade">

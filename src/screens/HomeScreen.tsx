@@ -25,18 +25,21 @@ export function HomeScreen() {
 
   const { nomePorteiro, atualizarNomePorteiro } = useAcessoContext();  
 
+  
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior="padding"
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 25}
     >
       <StatusBar barStyle="light-content" backgroundColor="#0f172a" />
       
       <ScrollView 
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled" 
+        keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
       >
-        {/* Header com cor sólida ao invés de gradiente */}
         <View style={styles.header}>
           <View style={styles.headerContent}>
             <Text style={styles.headerTitle}>Registro de Acesso</Text>
@@ -46,7 +49,6 @@ export function HomeScreen() {
           </View>
         </View>
 
-        {/* Card do Porteiro */}
         <View style={styles.operatorCard}>
           <View style={styles.operatorHeader}>
             <View style={styles.operatorIconContainer}>
@@ -71,7 +73,6 @@ export function HomeScreen() {
           </View>
         </View>
 
-        {/* Formulário */}
         <View style={styles.formContainer}>
           <Text style={styles.formTitle}>Dados do Motorista</Text>
           
@@ -263,6 +264,31 @@ export function HomeScreen() {
             )}
           </View>
 
+          {/* NOVO CAMPO: Número do Crachá */}
+          <View style={styles.inputGroup}>
+            <View style={styles.labelContainer}>
+              <Feather name="hash" size={16} color="#3b82f6" />
+              <Text style={styles.label}>Número do Crachá (Se houver)</Text>
+            </View>
+            <Controller
+              control={control}
+              name="numeroCracha" // Nome do campo deve ser o mesmo usado no Controller e no Banco
+              render={({ field: { onChange, onBlur, value } }) => (
+                <View style={styles.inputWrapper}>
+                  <TextInput
+                    style={styles.input}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Ex: 015"
+                    placeholderTextColor="#94a3b8"
+                    keyboardType="default"
+                  />
+                </View>
+              )}
+            />
+          </View>
+
           {/* Botão de Avançar */}
           <TouchableOpacity
             style={styles.button}
@@ -287,6 +313,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+    paddingBottom: Platform.OS === 'android' ? 150 : 80, 
   },
   header: {
     backgroundColor: "#0f172a",
